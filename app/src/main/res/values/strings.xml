@@ -1,3 +1,30 @@
 <resources>
     <string name="app_name">Inventario</string>
+
+    <!-- Login Activity -->
+    <string name="title_login">Iniciar Sesión</string>
+    <string name="helper_required">Requerido</string>
+    <string name="hint_user_login">Nombre Usuario</string>
+    <string name="hint_password_login">Contraseña</string>
+    <string name="tittle_button_login">Ingresar</string>
+    <string name="tittle_forgot_pass_login">¿Olvido su contraseña?</string>
+    <string name="error_length_username">Minimo 6 carácteres</string>
+    <string name="error_character_username">Carácteres no validos</string>
+    <string name="error_length_password">Minimo 8 carácteres</string>
+    <string name="error_uppercase_password">Debe contener un carácter en mayúscula</string>
+    <string name="error_lowercase_password">Debe contener un carácter en minúscula</string>
+    <string name="error_especialchar_password">Debe contener un carácter en minúscula</string>
+
+    <!-- Menu Login -->
+    <string name="tittle_home_menu_login">Inicio</string>
+    <string name="tittle_location_menu_login">Ubícanos</string>
+    <string name="tittle_contact_menu_login">Contáctenos</string>
+
+    <!-- Menu App -->
+    <string name="tittle_home_menu_app">Inicio</string>
+    <string name="tittle_product_menu_app">Productos</string>
+    <string name="tittle_sell_menu_app">Ventas</string>
+
+    <!-- Home Activity -->
+    <string name="tittle_welcome_home">Bienvenido, </string>
 </resources>

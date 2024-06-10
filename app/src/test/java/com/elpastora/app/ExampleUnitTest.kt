@@ -1,4 +1,4 @@
-package com.elpastora.inventario
+package com.elpastora.app
 
 import org.junit.Test
 
