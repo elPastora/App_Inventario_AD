@@ -16,7 +16,8 @@
         android:src="@drawable/img_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/desc_image_login"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cvLogin"
@@ -51,6 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
+                android:textColorHint="@color/white"
                 app:counterEnabled="true"
                 app:counterMaxLength="32"
                 app:helperText="@string/helper_required"
@@ -64,7 +66,7 @@
                     android:inputType="text"
                     android:lines="1"
                     android:maxLength="32"
-                    android:textColorHint="@color/title_app" />
+                    android:background="@color/background_app"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -77,7 +79,9 @@
                 app:counterMaxLength="16"
                 app:helperText="@string/helper_required"
                 app:helperTextTextColor="@color/helper_required"
-                app:passwordToggleEnabled="true">
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="@color/white"
+                android:textColorHint="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tietPassword"
@@ -87,7 +91,7 @@
                     android:inputType="textPassword"
                     android:lines="1"
                     android:maxLength="16"
-                    android:textColorHint="@color/title_app" />
+                    android:background="@color/background_app" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -104,6 +108,13 @@
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
+
+    <ProgressBar
+        android:id="@+id/pbLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/btnNavLogin"

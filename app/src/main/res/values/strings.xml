@@ -14,6 +14,7 @@
     <string name="error_uppercase_password">Debe contener un carácter en mayúscula</string>
     <string name="error_lowercase_password">Debe contener un carácter en minúscula</string>
     <string name="error_especialchar_password">Debe contener un carácter en minúscula</string>
+    <string name="desc_image_login">Imagen de la empresa</string>
 
     <!-- Menu Login -->
     <string name="tittle_home_menu_login">Inicio</string>
@@ -27,4 +28,19 @@
 
     <!-- Home Activity -->
     <string name="tittle_welcome_home">Bienvenido, </string>
+
+    <!-- Product Activity -->
+    <string name="tittle_category_product">Categoría</string>
+    <string name="tittle_quantity_product">Cantidad</string>
+    <string name="tittle_reserve_quantity_product">Cantidad Reserva</string>
+    <string name="tittle_price_product">Precio</string>
+    <string name="tittle_product_purchase_price">Precio Compra</string>
+    <string name="tittle_product_sale_price">Precio Venta</string>
+    <string name="button_create_product">Agregar</string>
+    <string name="hint_product_id">Codigo Producto</string>
+    <string name="hint_product_name">Nombre Producto</string>
+    <string name="hint_product_brand">Marca</string>
+    <string name="error_character_product_id">Carácteres no validos</string>
+    <string name="error_character_product_name">Carácteres no validos</string>
+
 </resources>

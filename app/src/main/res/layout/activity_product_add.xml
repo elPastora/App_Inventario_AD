@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_layout_app"
+    tools:context=".ui.product.ProductAddActivity">
+
+    <ProgressBar
+        android:id="@+id/pbProduct"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:padding="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/llcProductCreate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilProductId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:helperText="@string/helper_required"
+            app:helperTextTextColor="@color/helper_required">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tietProductId"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/hint_product_id"
+                android:inputType="text"
+                android:lines="1" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilProductName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:helperText="@string/helper_required"
+            app:helperTextTextColor="@color/helper_required"
+            android:layout_marginTop="10dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tietProductName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/hint_product_name"
+                android:inputType="text"
+                android:lines="1" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Spinner
+            android:id="@+id/snCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/tittle_category_product"
+            android:layout_marginTop="10dp"
+            android:background="@color/bg_et_strong_gray"/>
+
+        <Spinner
+            android:id="@+id/snBrand"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/hint_product_brand"
+            android:layout_marginTop="10dp"
+            android:background="@color/bg_et_strong_gray"/>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="@string/tittle_quantity_product"
+                android:textColor="@color/title_app"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="@string/tittle_reserve_quantity_product"
+                android:textColor="@color/title_app"
+                android:textSize="15sp" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilProductQuantity"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                app:helperText="@string/helper_required"
+                app:helperTextTextColor="@color/helper_required">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tietProductQuantity"
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/tittle_quantity_product"
+                    android:inputType="number"
+                    android:lines="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilProductQuantityRes"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                app:helperText="@string/helper_required"
+                app:helperTextTextColor="@color/helper_required">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tietProductQuantityRes"
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/tittle_reserve_quantity_product"
+                    android:inputType="number"
+                    android:lines="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="@string/tittle_product_purchase_price"
+                android:textColor="@color/title_app"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="@string/tittle_product_sale_price"
+                android:textColor="@color/title_app"
+                android:textSize="15sp" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilProductPurchasePrice"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                app:helperText="@string/helper_required"
+                app:helperTextTextColor="@color/helper_required">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tietProductPurchasePrice"
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/tittle_product_purchase_price"
+                    android:inputType="numberDecimal"
+                    android:lines="1"
+                    android:textColorHint="@color/title_app" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilProductSalePrice"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                app:helperText="@string/helper_required"
+                app:helperTextTextColor="@color/helper_required">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tietProductSalePrice"
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/tittle_product_sale_price"
+                    android:inputType="numberDecimal"
+                    android:lines="1"
+                    android:textColorHint="@color/title_app" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/llcProductCreate"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/background_app"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnProductCreate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:backgroundTint="@color/button_success_app"
+            android:text="@string/button_create_product"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -18,7 +19,6 @@ import com.elpastora.app.data.util.ApiClient
 import com.elpastora.app.databinding.ActivityLoginBinding
 import com.elpastora.app.ui.ContactActivity
 import com.elpastora.app.ui.HomeActivity
-import com.elpastora.app.ui.HomeActivity.Companion.EXTRA_FULLNAME
 import com.elpastora.app.ui.LocationActivity
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
@@ -26,7 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-val Context.dataStore by preferencesDataStore(name = "TOKEN_PREFERENCES")
+val Context.dataStore by preferencesDataStore(name = "USER_PREFERENCES")
 
 class LoginActivity : AppCompatActivity() {
 
@@ -86,6 +86,8 @@ class LoginActivity : AppCompatActivity() {
             binding.tietPassword.text.toString()
         )
 
+        binding.pbLogin.isVisible = true
+
         CoroutineScope(Dispatchers.IO).launch {
 
             val service = ApiClient.getRetrofit().create(LoginService::class.java)
@@ -97,9 +99,10 @@ class LoginActivity : AppCompatActivity() {
                     val login = response.body()
                     if (login != null) {
                         val fullName = "${login.usuario.nombre} ${login.usuario.apellido}"
-                        saveValues(login.token)
+                        saveValues(login.usuario.nombreUsuario,login.usuario.email, fullName,login.token)
                         runOnUiThread {
-                            goToMenu(fullName)
+                            binding.pbLogin.isVisible = false
+                            goToMenu()
                         }
                     }
                 } else {
@@ -115,19 +118,20 @@ class LoginActivity : AppCompatActivity() {
 
                     runOnUiThread {
                         invalidFormLogin(message)
+                        binding.pbLogin.isVisible = false
                     }
 
                 }
             } catch (exception: Exception) {
                 Log.i("User", exception.toString())
+                binding.pbLogin.isVisible = false
             }
 
         }
     }
 
-    private fun goToMenu(fullName: String) {
+    private fun goToMenu() {
         val intent = Intent(this, HomeActivity::class.java)
-        intent.putExtra(EXTRA_FULLNAME, fullName)
         startActivity(intent)
     }
 
@@ -206,8 +210,11 @@ class LoginActivity : AppCompatActivity() {
         return null
     }
 
-    private suspend fun saveValues(token:String){
+    private suspend fun saveValues(nombreUsuario:String, email:String, nombreCompleto:String, token:String ){
         dataStore.edit { preferences ->
+            preferences[stringPreferencesKey("nombreUsuario")] = nombreUsuario
+            preferences[stringPreferencesKey("email")] = email
+            preferences[stringPreferencesKey("nombreCompleto")] = nombreCompleto
             preferences[stringPreferencesKey("token")] = token
         }
     }

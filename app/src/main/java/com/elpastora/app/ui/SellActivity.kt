@@ -2,12 +2,10 @@ package com.elpastora.app.ui
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.elpastora.app.R
 import com.elpastora.app.databinding.ActivitySellBinding
+import com.elpastora.app.ui.product.ProductActivity
 
 class SellActivity : AppCompatActivity() {
 

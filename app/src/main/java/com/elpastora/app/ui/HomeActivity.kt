@@ -5,15 +5,19 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.bold
+import androidx.datastore.preferences.core.stringPreferencesKey
 import com.elpastora.app.R
+import com.elpastora.app.data.model.UserProfile
 import com.elpastora.app.databinding.ActivityHomeBinding
+import com.elpastora.app.ui.login.dataStore
+import com.elpastora.app.ui.product.ProductActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 
 class HomeActivity : AppCompatActivity() {
-
-    companion object {
-        const val EXTRA_FULLNAME = "EXTRA_FULLNAME"
-    }
 
     private lateinit var binding: ActivityHomeBinding
 
@@ -22,15 +26,26 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val fullName:String = intent.getStringExtra(EXTRA_FULLNAME).orEmpty()
-        val welcome = getString(R.string.tittle_welcome_home)
 
-        val ss1 = SpannableStringBuilder()
-            .append("${welcome} ")
-            .bold{append(fullName)}
+        CoroutineScope(Dispatchers.IO).launch {
+
+            getUserProfile().collect{
+                val fullName:String = it.nombreCompleto
+                val welcome = getString(R.string.tittle_welcome_home)
+
+                val ss1 = SpannableStringBuilder()
+                    .append("${welcome} ")
+                    .bold{append(fullName)}
+
+                runOnUiThread {
+                    binding.tvWelcome.setText(ss1)
+                }
+
+            }
+
+        }
 
 
-        binding.tvWelcome.setText(ss1)
 
         binding.btnNavHome.setSelectedItemId(R.id.imHomeApp)
 
@@ -52,4 +67,14 @@ class HomeActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun getUserProfile() = dataStore.data.map { preferences ->
+        UserProfile(
+            nombreUsuario = preferences[stringPreferencesKey("nombreUsuario")].orEmpty(),
+            email = preferences[stringPreferencesKey("email")].orEmpty(),
+            nombreCompleto = preferences[stringPreferencesKey("nombreCompleto")].orEmpty(),
+            token = preferences[stringPreferencesKey("token")].orEmpty()
+        )
+    }
+
 }
