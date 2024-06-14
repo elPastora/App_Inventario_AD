@@ -1,14 +1,14 @@
 package com.elpastora.app.ui.product
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
-import android.widget.Toast
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.elpastora.app.R
@@ -22,10 +22,10 @@ import com.elpastora.app.data.model.ErrorResponse
 import com.elpastora.app.data.model.Marca
 import com.elpastora.app.data.model.ProductRequest
 import com.elpastora.app.data.model.ProductResponse
+import com.elpastora.app.data.model.Producto
 import com.elpastora.app.data.model.UserProfile
 import com.elpastora.app.data.util.ApiClient
-import com.elpastora.app.databinding.ActivityProductAddBinding
-import com.elpastora.app.ui.SellActivity
+import com.elpastora.app.databinding.ActivityProductEditBinding
 import com.elpastora.app.ui.catalog.adapter.BrandsCatalogAdapter
 import com.elpastora.app.ui.catalog.adapter.CategoriesCatalogAdapter
 import com.elpastora.app.ui.login.dataStore
@@ -36,163 +36,155 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class ProductAddActivity : AppCompatActivity() {
+class ProductEditActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityProductAddBinding
+    private lateinit var binding: ActivityProductEditBinding
+
+    private var isChangeButtom:Boolean = false
 
     private lateinit var catCatalogAdapter: CategoriesCatalogAdapter
 
     private lateinit var brandCatalogAdapter: BrandsCatalogAdapter
 
+    private var codigoProducto: String = ""
+
+    companion object {
+        const val EXTRA_ID = "EXTRA_ID"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityProductAddBinding.inflate(layoutInflater)
+        binding = ActivityProductEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initUI()
+
+        codigoProducto = intent.getStringExtra(EXTRA_ID).orEmpty()
+        getProductById(codigoProducto)
         initListeners()
     }
 
-    private fun initUI() {
-        productIdFocusListener()
+    private fun getProductById(codigoProducto: String) {
+        binding.pbProduct.isVisible = true
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val service = ApiClient.getRetrofit().create(ProductService::class.java)
+
+            try {
+                getUserProfile().collect {
+                    val token: String = it.token
+
+                    val response: Response<ProductResponse> =
+                        service.getProductById("Bearer $token",codigoProducto)
+
+                    if (response.isSuccessful) {
+                        val product = response.body()
+
+                        if (product != null) {
+                            runOnUiThread {
+                                createUI(product.producto)
+                                binding.pbProduct.isVisible = false
+                            }
+                        }
+                    } else {
+
+                        val errorResponse =
+                            Gson().fromJson(
+                                response.errorBody()?.string(),
+                                ErrorResponse::class.java
+                            )
+
+                        var message = ""
+
+                        errorResponse.errors.map {
+                            message = it.message
+                        }
+
+                        runOnUiThread {
+                            invalidFormLogin(message)
+                            binding.pbProduct.isVisible = false
+                        }
+
+                    }
+                }
+            }catch (exception: Exception) {
+                Log.i("Product", exception.toString())
+                binding.pbProduct.isVisible = false
+            }
+        }
+    }
+
+    private fun createUI(product: Producto){
+        binding.tietProductId.setText(product.codigoProducto)
+        binding.tietProductId.isEnabled = false
+        binding.tietProductName.setText(product.nombre)
+        binding.tietProductName.isEnabled = false
+        val category = arrayOf(product.nombreCategoria)
+        var adapter = ArrayAdapter(this, R.layout.item_drowdowm, category)
+        binding.snCategory.adapter = adapter
+        binding.snCategory.isEnabled = false
+        val brand = arrayOf(product.nombreMarca)
+        adapter = ArrayAdapter(this, R.layout.item_drowdowm, brand)
+        binding.snBrand.adapter = adapter
+        binding.snBrand.isEnabled = false
+        binding.tietProductQuantity.setText(product.cantidad.toString())
+        binding.tietProductQuantity.isEnabled = false
+        binding.tietProductQuantityRes.setText(product.cantidadReserva.toString())
+        binding.tietProductQuantityRes.isEnabled = false
+        binding.tietProductPurchasePrice.setText(product.precioCompra.toString())
+        binding.tietProductPurchasePrice.isEnabled = false
+        binding.tietProductSalePrice.setText(product.precioVenta.toString())
+        binding.tietProductSalePrice.isEnabled = false
+
+    }
+
+    private fun initListeners() {
+        binding.btnProductEdit.setOnClickListener {
+            if(isChangeButtom){
+                submitForm()
+            }else{
+                changeFormToEdit()
+            }
+
+        }
+    }
+
+    private fun changeFormToEdit() {
+        binding.pbProduct.isVisible = true
+        isChangeButtom = true
+        val helperRequired:String = getString(R.string.helper_required)
+
+        binding.tietProductName.isEnabled = true
+        //binding.tilProductName.helperText = helperRequired
+
+        binding.snCategory.isEnabled = true
+        binding.snBrand.isEnabled = true
+
+        binding.tietProductQuantity.isEnabled = true
+        //binding.tilProductQuantity.helperText = helperRequired
+
+        binding.tietProductQuantityRes.isEnabled = true
+        //binding.tilProductQuantityRes.helperText = helperRequired
+
+        binding.tietProductPurchasePrice.isEnabled = true
+        //binding.tilProductPurchasePrice.helperText = helperRequired
+
+        binding.tietProductSalePrice.isEnabled = true
+        //binding.tilProductSalePrice.helperText = helperRequired
+
+        binding.btnProductEdit.setText(R.string.button_edit_product)
+        binding.btnProductEdit.setBackgroundColor(getColor(R.color.button_success_app))
+
         productNameFocusListener()
         productQuantityFocusListener()
         productReserveQuantityFocusListener()
         productPurchasePriceFocusListener()
         productSalePriceFocusListener()
         getCatalogs()
-    }
 
-    private fun productIdFocusListener() {
-        binding.tietProductId.setOnFocusChangeListener { _, focused ->
-            if (!focused) {
-                binding.tilProductId.helperText = validProductId()
-            }
-
-        }
-    }
-
-    private fun validProductId(): String? {
-
-        val productId = binding.tietProductId.text.toString()
-        val userNameRegex = "^[a-zA-Z0-9]*\$"
-
-        if (!Regex(userNameRegex).matches(productId)) {
-            return getString(R.string.error_character_product_id)
-        } else if (productId.isEmpty()) {
-            return getString(R.string.helper_required)
-        }
-
-        return null
-    }
-
-    private fun productNameFocusListener() {
-        binding.tietProductName.setOnFocusChangeListener { _, focused ->
-            if (!focused) {
-                binding.tilProductName.helperText = validProductName()
-            }
-
-        }
-    }
-
-    private fun validProductName(): String? {
-
-        val productName = binding.tietProductName.text.toString()
-        val userNameRegex = "^[a-zA-Z0-9 /]*\$"
-
-        if (!Regex(userNameRegex).matches(productName)) {
-            return getString(R.string.error_character_product_name)
-        } else if (productName.isEmpty()) {
-            return getString(R.string.helper_required)
-        }
-
-        return null
-    }
-
-    private fun productQuantityFocusListener() {
-        binding.tietProductQuantity.setOnFocusChangeListener { _, focused ->
-            if (!focused) {
-                binding.tilProductQuantity.helperText = validProductQuantity()
-            }
-
-        }
-    }
-
-    private fun validProductQuantity(): String? {
-
-        val productQuantity = binding.tietProductQuantity.text.toString()
-
-        if (productQuantity.isEmpty()) {
-            return getString(R.string.helper_required)
-        }
-
-        return null
-    }
-
-    private fun productReserveQuantityFocusListener() {
-        binding.tietProductQuantityRes.setOnFocusChangeListener { _, focused ->
-            if (!focused) {
-                binding.tilProductQuantityRes.helperText = validProductReserveQuantity()
-            }
-
-        }
-    }
-
-    private fun validProductReserveQuantity(): String? {
-
-        val productQuantityRes = binding.tietProductQuantityRes.text.toString()
-
-        if (productQuantityRes.isEmpty()) {
-            return getString(R.string.helper_required)
-        }
-
-        return null
-    }
-
-    private fun productPurchasePriceFocusListener() {
-        binding.tietProductPurchasePrice.setOnFocusChangeListener { _, focused ->
-            if (!focused) {
-                binding.tilProductPurchasePrice.helperText = validProductPurchasePrice()
-            }
-
-        }
-    }
-
-    private fun validProductPurchasePrice(): String? {
-
-        val productPurchasePrice = binding.tietProductPurchasePrice.text.toString()
-
-        if (productPurchasePrice.isEmpty()) {
-            return getString(R.string.helper_required)
-        }
-
-        return null
-    }
-
-    private fun productSalePriceFocusListener() {
-        binding.tietProductSalePrice.setOnFocusChangeListener { _, focused ->
-            if (!focused) {
-                binding.tilProductSalePrice.helperText = validProductSalePrice()
-            }
-
-        }
-    }
-
-    private fun validProductSalePrice(): String? {
-
-        val productSalePrice = binding.tietProductSalePrice.text.toString()
-
-        if (productSalePrice.isEmpty()) {
-            return getString(R.string.helper_required)
-        }
-
-        return null
+        binding.pbProduct.isVisible = false
     }
 
     private fun getCatalogs() {
-        binding.pbProduct.isVisible = true
         getAllCategory()
         getAllBrand()
-        binding.pbProduct.isVisible = false
     }
 
     private fun getAllCategory() {
@@ -335,27 +327,9 @@ class ProductAddActivity : AppCompatActivity() {
         }
     }
 
-    private fun invalidFormService(message: String) {
-        AlertDialog.Builder(this)
-            .setTitle("Forma Invalida")
-            .setMessage(message)
-            .setPositiveButton("Okay") { _, _ ->
-                //no hacer nada
-            }
-            .show()
-    }
-
-    private fun initListeners() {
-
-        binding.btnProductCreate.setOnClickListener {
-            submitForm()
-        }
-    }
-
     private fun submitForm() {
         binding.pbProduct.isVisible = true
 
-        binding.tilProductId.helperText = validProductId()
         binding.tilProductName.helperText = validProductName()
         binding.tilProductQuantity.helperText = validProductQuantity()
         binding.tilProductQuantityRes.helperText = validProductReserveQuantity()
@@ -372,12 +346,115 @@ class ProductAddActivity : AppCompatActivity() {
         if (isValidProductId && isValidProductName && isValidProductQuantity && isValidProductQuantityRes && isValidProductPurchasePrice
             && isValidProductSalePrice
         ) {
-            addProduct()
+            editProduct()
         } else {
             invalidForm()
         }
 
         binding.pbProduct.isVisible = false
+    }
+
+    private fun productNameFocusListener() {
+        binding.tietProductName.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.tilProductName.helperText = validProductName()
+            }
+
+        }
+    }
+
+    private fun validProductName(): String? {
+
+        val productName = binding.tietProductName.text.toString()
+        val userNameRegex = "^[a-zA-Z0-9 /]*\$"
+
+        if (!Regex(userNameRegex).matches(productName)) {
+            return getString(R.string.error_character_product_name)
+        } else if (productName.isEmpty()) {
+            return getString(R.string.helper_required)
+        }
+
+        return null
+    }
+
+    private fun productQuantityFocusListener() {
+        binding.tietProductQuantity.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.tilProductQuantity.helperText = validProductQuantity()
+            }
+
+        }
+    }
+
+    private fun validProductQuantity(): String? {
+
+        val productQuantity = binding.tietProductQuantity.text.toString()
+
+        if (productQuantity.isEmpty()) {
+            return getString(R.string.helper_required)
+        }
+
+        return null
+    }
+
+    private fun productReserveQuantityFocusListener() {
+        binding.tietProductQuantityRes.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.tilProductQuantityRes.helperText = validProductReserveQuantity()
+            }
+
+        }
+    }
+
+    private fun validProductReserveQuantity(): String? {
+
+        val productQuantityRes = binding.tietProductQuantityRes.text.toString()
+
+        if (productQuantityRes.isEmpty()) {
+            return getString(R.string.helper_required)
+        }
+
+        return null
+    }
+
+    private fun productPurchasePriceFocusListener() {
+        binding.tietProductPurchasePrice.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.tilProductPurchasePrice.helperText = validProductPurchasePrice()
+            }
+
+        }
+    }
+
+    private fun validProductPurchasePrice(): String? {
+
+        val productPurchasePrice = binding.tietProductPurchasePrice.text.toString()
+
+        if (productPurchasePrice.isEmpty()) {
+            return getString(R.string.helper_required)
+        }
+
+        return null
+    }
+
+    private fun productSalePriceFocusListener() {
+        binding.tietProductSalePrice.setOnFocusChangeListener { _, focused ->
+            if (!focused) {
+                binding.tilProductSalePrice.helperText = validProductSalePrice()
+            }
+
+        }
+    }
+
+    private fun validProductSalePrice(): String? {
+
+        val productSalePrice = binding.tietProductSalePrice.text.toString()
+
+        if (productSalePrice.isEmpty()) {
+            return getString(R.string.helper_required)
+        }
+
+        return null
     }
 
     private fun invalidForm() {
@@ -404,7 +481,7 @@ class ProductAddActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun addProduct() {
+    private fun editProduct(){
         val selectedCategory = binding.snCategory.selectedItem as Categoria
         val selectedBrand = binding.snBrand.selectedItem as Marca
 
@@ -427,7 +504,7 @@ class ProductAddActivity : AppCompatActivity() {
                     val token: String = it.token
 
                     val response: Response<ProductResponse> =
-                        service.addProducts("Bearer $token",product)
+                        service.updateProduct("Bearer $token",codigoProducto, product)
 
                     if (response.isSuccessful) {
                         val prod = response.body()
@@ -480,5 +557,24 @@ class ProductAddActivity : AppCompatActivity() {
         )
     }
 
+    private fun invalidFormLogin(message: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Forma Invalida")
+            .setMessage(message)
+            .setPositiveButton("Okay") { _, _ ->
+                //no hacer nada
+            }
+            .show()
+    }
+
+    private fun invalidFormService(message: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Forma Invalida")
+            .setMessage(message)
+            .setPositiveButton("Okay") { _, _ ->
+                //no hacer nada
+            }
+            .show()
+    }
 
 }

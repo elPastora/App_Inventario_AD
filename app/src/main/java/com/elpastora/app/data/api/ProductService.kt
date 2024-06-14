@@ -8,6 +8,8 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
 
 interface ProductService {
 
@@ -16,4 +18,10 @@ interface ProductService {
 
     @POST("productos")
     suspend fun addProducts(@Header(value = "Authorization") authHeader: String, @Body productRequest: ProductRequest) : Response<ProductResponse>
+
+    @GET("productos/{id}")
+    suspend fun getProductById(@Header(value = "Authorization") authHeader: String, @Path("id") productId: String) : Response<ProductResponse>
+
+    @PUT("productos/{id}")
+    suspend fun updateProduct(@Header(value = "Authorization") authHeader: String, @Path("id") productId: String, @Body productRequest: ProductRequest) : Response<ProductResponse>
 }

@@ -32,19 +32,18 @@
             android:id="@+id/tilProductId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/title_app"
-            app:helperText="@string/helper_required"
-            app:helperTextTextColor="@color/helper_required">
+            android:textColorHint="@color/title_app">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tietProductId"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:hint="@string/hint_product_id"
+                android:enabled="false"
                 android:inputType="text"
                 android:lines="1"
-                android:textColor="@color/title_app" />
+                android:textColor="@color/title_app"
+                tools:hint="@string/hint_product_id" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -53,20 +52,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:textColorHint="@color/title_app"
-            app:helperText="@string/helper_required"
-            app:helperTextTextColor="@color/helper_required"
-            >
+            android:textColorHint="@color/title_app">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tietProductName"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:hint="@string/hint_product_name"
+                android:enabled="true"
                 android:inputType="text"
                 android:lines="1"
-                android:textColor="@color/title_app" />
+                android:textColor="@color/title_app"
+                tools:hint="@string/hint_product_name" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -76,8 +73,8 @@
             android:layout_height="48dp"
             android:layout_marginTop="10dp"
             android:background="@color/white"
-            android:prompt="@string/tittle_category_product"
-            />
+            android:enabled="true"
+            android:prompt="@string/tittle_category_product" />
 
         <Spinner
             android:id="@+id/snBrand"
@@ -85,6 +82,7 @@
             android:layout_height="48dp"
             android:layout_marginTop="10dp"
             android:background="@color/white"
+            android:enabled="true"
             android:prompt="@string/hint_product_brand" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -124,19 +122,18 @@
                 android:layout_width="180dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
-                android:textColorHint="@color/title_app"
-                app:helperText="@string/helper_required"
-                app:helperTextTextColor="@color/helper_required">
+                android:textColorHint="@color/title_app">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tietProductQuantity"
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:hint="@string/placeholder_number"
+                    android:enabled="true"
                     android:inputType="number"
                     android:lines="1"
-                    android:textColor="@color/title_app" />
+                    android:textColor="@color/title_app"
+                    tools:hint="@string/placeholder_number" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -144,19 +141,18 @@
                 android:id="@+id/tilProductQuantityRes"
                 android:layout_width="180dp"
                 android:layout_height="wrap_content"
-                android:textColorHint="@color/title_app"
-                app:helperText="@string/helper_required"
-                app:helperTextTextColor="@color/helper_required">
+                android:textColorHint="@color/title_app">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tietProductQuantityRes"
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:hint="@string/placeholder_number"
+                    android:enabled="true"
                     android:inputType="number"
                     android:lines="1"
-                    android:textColor="@color/title_app" />
+                    android:textColor="@color/title_app"
+                    tools:hint="@string/placeholder_number" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -199,19 +195,18 @@
                 android:layout_width="180dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
-                android:textColorHint="@color/title_app"
-                app:helperText="@string/helper_required"
-                app:helperTextTextColor="@color/helper_required">
+                android:textColorHint="@color/title_app">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tietProductPurchasePrice"
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:hint="@string/placeholder_double"
+                    android:enabled="true"
                     android:inputType="numberDecimal"
                     android:lines="1"
-                    android:textColor="@color/title_app" />
+                    android:textColor="@color/title_app"
+                    tools:hint="@string/placeholder_double" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -219,19 +214,18 @@
                 android:id="@+id/tilProductSalePrice"
                 android:layout_width="180dp"
                 android:layout_height="wrap_content"
-                android:textColorHint="@color/title_app"
-                app:helperText="@string/helper_required"
-                app:helperTextTextColor="@color/helper_required">
+                android:textColorHint="@color/title_app">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tietProductSalePrice"
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:hint="@string/placeholder_double"
+                    android:enabled="true"
                     android:inputType="numberDecimal"
                     android:lines="1"
-                    android:textColor="@color/title_app" />
+                    android:textColor="@color/title_app"
+                    tools:hint="@string/placeholder_double" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -251,12 +245,12 @@
         app:layout_constraintEnd_toStartOf="parent">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnProductCreate"
+            android:id="@+id/btnProductEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:backgroundTint="@color/button_success_app"
-            android:text="@string/button_create_product"
+            android:backgroundTint="@color/button_info_app"
+            android:text="@string/button_info_product"
             android:textSize="15sp"
             android:textStyle="bold" />
 

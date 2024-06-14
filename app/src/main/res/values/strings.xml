@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Inventario</string>
+    <string name="placeholder_number">#</string>
+    <string name="placeholder_double">#.##</string>
 
     <!-- Login Activity -->
     <string name="title_login">Iniciar Sesión</string>
@@ -37,6 +39,8 @@
     <string name="tittle_product_purchase_price">Precio Compra</string>
     <string name="tittle_product_sale_price">Precio Venta</string>
     <string name="button_create_product">Agregar</string>
+    <string name="button_info_product">Editar</string>
+    <string name="button_edit_product">Actualizar</string>
     <string name="hint_product_id">Codigo Producto</string>
     <string name="hint_product_name">Nombre Producto</string>
     <string name="hint_product_brand">Marca</string>

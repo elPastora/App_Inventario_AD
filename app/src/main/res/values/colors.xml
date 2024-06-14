@@ -14,6 +14,7 @@
     <color name="title_app">#222222</color>
     <color name="button_primary_app">#0D6EFD</color>
     <color name="button_success_app">#28A645</color>
+    <color name="button_info_app">#57595A</color>
     <color name="border_strong_gray">#757575</color>
     <color name="bg_et_strong_gray">#E1E3E5</color>
     <color name="helper_required">#A00606</color>

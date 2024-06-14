@@ -19,6 +19,7 @@ import com.elpastora.app.databinding.ActivityProductBinding
 import com.elpastora.app.ui.HomeActivity
 import com.elpastora.app.ui.SellActivity
 import com.elpastora.app.ui.login.dataStore
+import com.elpastora.app.ui.product.ProductEditActivity.Companion.EXTRA_ID
 import com.elpastora.app.ui.product.adapter.ProductAdapter
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
@@ -140,8 +141,8 @@ class ProductActivity : AppCompatActivity() {
     }
 
     private fun navToProductById(id: String) {
-        val intent = Intent(this, SellActivity::class.java)
-        //intent.putExtra(EXTRA_ID, id)
+        val intent = Intent(this, ProductEditActivity::class.java)
+        intent.putExtra(EXTRA_ID, id)
         startActivity(intent)
     }
 

@@ -12,12 +12,12 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:contentDescription="@string/desc_image_login"
         android:scaleType="fitXY"
         android:src="@drawable/img_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/desc_image_login"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cvLogin"
@@ -52,7 +52,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:textColorHint="@color/white"
                 app:counterEnabled="true"
                 app:counterMaxLength="32"
                 app:helperText="@string/helper_required"
@@ -62,11 +61,12 @@
                     android:id="@+id/tietUserName"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:drawableStart="@drawable/ic_user"
+                    android:drawableTint="#676767"
                     android:hint="@string/hint_user_login"
                     android:inputType="text"
                     android:lines="1"
-                    android:maxLength="32"
-                    android:background="@color/background_app"/>
+                    android:maxLength="32" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -79,19 +79,19 @@
                 app:counterMaxLength="16"
                 app:helperText="@string/helper_required"
                 app:helperTextTextColor="@color/helper_required"
-                app:passwordToggleEnabled="true"
-                app:passwordToggleTint="@color/white"
-                android:textColorHint="@color/white">
+                app:passwordToggleEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tietPassword"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:drawableStart="@android:drawable/ic_lock_lock"
+                    android:drawableTint="#676767"
+                    android:gravity="center_vertical"
                     android:hint="@string/hint_password_login"
                     android:inputType="textPassword"
                     android:lines="1"
-                    android:maxLength="16"
-                    android:background="@color/background_app" />
+                    android:maxLength="16" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -113,18 +113,17 @@
         android:id="@+id/pbLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/btnNavLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:background="@color/background_app"
-        app:menu="@menu/menu_login"
-        app:itemRippleColor="@color/background_layout_app"
         app:itemIconTint="@color/icons_color"
+        app:itemRippleColor="@color/background_layout_app"
         app:itemTextColor="@color/icons_color"
-        android:layout_alignParentBottom="true"/>
+        app:menu="@menu/menu_login" />
 
 </RelativeLayout>
