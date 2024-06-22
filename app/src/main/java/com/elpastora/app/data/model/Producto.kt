@@ -12,5 +12,6 @@ data class Producto(
     @SerializedName("cantidad") val cantidad: Int,
     @SerializedName("cantidadReserva") val cantidadReserva: Int,
     @SerializedName("precioCompra") val precioCompra: Int,
-    @SerializedName("precioVenta") val precioVenta: Int
+    @SerializedName("precioVenta") val precioVenta: Int,
+    @SerializedName("imagen") val imagen: String
 )

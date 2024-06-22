@@ -1,12 +1,17 @@
 package com.elpastora.app.ui.product
 
 
+import android.content.ContentResolver
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
-import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -20,12 +25,10 @@ import com.elpastora.app.data.model.Categoria
 import com.elpastora.app.data.model.CategoryResponse
 import com.elpastora.app.data.model.ErrorResponse
 import com.elpastora.app.data.model.Marca
-import com.elpastora.app.data.model.ProductRequest
 import com.elpastora.app.data.model.ProductResponse
 import com.elpastora.app.data.model.UserProfile
 import com.elpastora.app.data.util.ApiClient
 import com.elpastora.app.databinding.ActivityProductAddBinding
-import com.elpastora.app.ui.SellActivity
 import com.elpastora.app.ui.catalog.adapter.BrandsCatalogAdapter
 import com.elpastora.app.ui.catalog.adapter.CategoriesCatalogAdapter
 import com.elpastora.app.ui.login.dataStore
@@ -34,7 +37,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Response
+import java.io.File
+import java.io.FileOutputStream
 
 class ProductAddActivity : AppCompatActivity() {
 
@@ -43,6 +53,13 @@ class ProductAddActivity : AppCompatActivity() {
     private lateinit var catCatalogAdapter: CategoriesCatalogAdapter
 
     private lateinit var brandCatalogAdapter: BrandsCatalogAdapter
+
+    private lateinit var imageUri: Uri
+
+    private val contract = registerForActivityResult(ActivityResultContracts.PickVisualMedia()){ uri ->
+        imageUri = uri!!
+        binding.ivProduct.setImageURI(uri)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -347,10 +364,16 @@ class ProductAddActivity : AppCompatActivity() {
 
     private fun initListeners() {
 
+        binding.imageButton.setOnClickListener{
+            contract.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+
         binding.btnProductCreate.setOnClickListener {
             submitForm()
         }
     }
+
+
 
     private fun submitForm() {
         binding.pbProduct.isVisible = true
@@ -408,63 +431,101 @@ class ProductAddActivity : AppCompatActivity() {
         val selectedCategory = binding.snCategory.selectedItem as Categoria
         val selectedBrand = binding.snBrand.selectedItem as Marca
 
-        val product: ProductRequest = ProductRequest(
-            binding.tietProductId.text.toString(),
-            binding.tietProductName.text.toString(),
-            selectedCategory.idCategoria,
-            selectedBrand.idMarca,
-            binding.tietProductQuantity.text.toString().toInt(),
-            binding.tietProductQuantityRes.text.toString().toInt(),
-            binding.tietProductPurchasePrice.text.toString().toDouble(),
-            binding.tietProductSalePrice.text.toString().toDouble()
-        )
+        try {
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val service = ApiClient.getRetrofit().create(ProductService::class.java)
+            val file = getFileFromUri(imageUri)
 
-            try {
-                getUserProfile().collect {
-                    val token: String = it.token
+            Log.i("Product",file!!.name)
 
-                    val response: Response<ProductResponse> =
-                        service.addProducts("Bearer $token",product)
+            val partImage = MultipartBody.Part.createFormData(
+                "imagen",
+                file!!.name,
+                file.asRequestBody()
+            )
 
-                    if (response.isSuccessful) {
-                        val prod = response.body()
+            Log.i("Product",partImage.body.toString())
 
-                        if (prod != null) {
-                            runOnUiThread {
-                                navToProduct()
-                                binding.pbProduct.isVisible = false
-                            }
-                        }
-                    } else {
+            CoroutineScope(Dispatchers.IO).launch {
+                val service = ApiClient.getRetrofit().create(ProductService::class.java)
 
-                        val errorResponse =
-                            Gson().fromJson(
-                                response.errorBody()?.string(),
-                                ErrorResponse::class.java
+                try {
+                    getUserProfile().collect {
+                        val token: String = it.token
+
+                        /*val response: Response<ProductResponse> =
+                            service.addProducts(
+                                "Bearer $token",
+                                binding.tietProductId.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+                                binding.tietProductName.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+                                selectedCategory.idCategoria.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+                                selectedBrand.idMarca.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+                                binding.tietProductQuantity.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+                                binding.tietProductQuantityRes.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+                                binding.tietProductPurchasePrice.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+                                binding.tietProductSalePrice.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+                                partImage
+                            )*/
+
+                        val response: Response<ProductResponse> =
+                            service.addProducts(
+                                //"Bearer $token",
+                                partImage
                             )
 
-                        var message = ""
 
-                        errorResponse.errors.map {
-                            message = it.message
+                        if (response.isSuccessful) {
+                            val prod = response.body()
+
+                            if (prod != null) {
+                                runOnUiThread {
+                                    //navToProduct()
+                                    binding.pbProduct.isVisible = false
+                                }
+                            }
+                        } else {
+
+                            val errorResponse =
+                                Gson().fromJson(
+                                    response.errorBody()?.string(),
+                                    ErrorResponse::class.java
+                                )
+
+                            var message = ""
+
+                            errorResponse.errors.map {
+                                message = it.message
+                            }
+
+                            runOnUiThread {
+                                invalidFormService(message)
+                                binding.pbProduct.isVisible = false
+                            }
+
                         }
-
-                        runOnUiThread {
-                            invalidFormService(message)
-                            binding.pbProduct.isVisible = false
-                        }
-
                     }
+                } catch (exception: Exception) {
+                    Log.i("Product", exception.toString())
+                    binding.pbProduct.isVisible = false
                 }
-            } catch (exception: Exception) {
-                Log.i("Product", exception.toString())
-                binding.pbProduct.isVisible = false
             }
+        }catch (exception: Exception) {
+            Log.i("Product", exception.toString())
+            binding.pbProduct.isVisible = false
         }
+
+
     }
+
+    private fun getFileFromUri(uri: Uri): File? {
+        val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = contentResolver.query(uri, filePathColumn, null, null, null)
+        cursor?.moveToFirst()
+        val columnIndex = cursor?.getColumnIndex(filePathColumn[0])
+        val filePath = cursor?.getString(columnIndex!!)
+        cursor?.close()
+        return filePath?.let { File(it) }
+    }
+
 
     private fun navToProduct() {
         val intent = Intent(this, ProductActivity::class.java)
@@ -482,3 +543,4 @@ class ProductAddActivity : AppCompatActivity() {
 
 
 }
+

@@ -22,16 +22,47 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:padding="15dp"
+        android:paddingHorizontal="15dp"
         app:layout_constraintBottom_toTopOf="@+id/llcProductCreate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="130dp">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivProduct"
+                android:layout_width="150dp"
+                android:layout_height="130sp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center_vertical"
+                android:padding="5dp"
+                android:scaleType="centerCrop"
+                app:strokeColor="@color/background_app"
+
+                app:strokeWidth="3dp" />
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                style="@android:style/Widget.Material.Light.ImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerInParent="true"
+                android:backgroundTint="#00000000"
+                android:tint="@color/black"
+                android:visibility="visible"
+                app:srcCompat="@android:drawable/ic_menu_gallery" />
+
+        </RelativeLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilProductId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:textColorHint="@color/title_app"
             app:helperText="@string/helper_required"
             app:helperTextTextColor="@color/helper_required">
@@ -55,8 +86,7 @@
             android:layout_marginTop="10dp"
             android:textColorHint="@color/title_app"
             app:helperText="@string/helper_required"
-            app:helperTextTextColor="@color/helper_required"
-            >
+            app:helperTextTextColor="@color/helper_required">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tietProductName"
@@ -76,8 +106,7 @@
             android:layout_height="48dp"
             android:layout_marginTop="10dp"
             android:background="@color/white"
-            android:prompt="@string/tittle_category_product"
-            />
+            android:prompt="@string/tittle_category_product" />
 
         <Spinner
             android:id="@+id/snBrand"
@@ -95,7 +124,7 @@
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="30dp"
+                android:layout_height="20dp"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:text="@string/tittle_quantity_product"
@@ -104,7 +133,7 @@
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="30dp"
+                android:layout_height="20dp"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:text="@string/tittle_reserve_quantity_product"
@@ -170,7 +199,7 @@
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="30dp"
+                android:layout_height="20dp"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:text="@string/tittle_product_purchase_price"
@@ -179,7 +208,7 @@
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="30dp"
+                android:layout_height="20dp"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:text="@string/tittle_product_sale_price"
